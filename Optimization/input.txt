@@ -1,1 +1,8 @@
-
+t1=-c
+t2=a+b
+t3=a+b
+t4=a+b
+t5=a+b
+t6=d+5
+t7=a+b
+t8=-c
