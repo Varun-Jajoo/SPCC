@@ -1,4 +1,4 @@
-int jitesh = 10 + 10p;
-int i = jitesh + 1;
-float j = i / jitesh;
+int name = 10 + 10p;
+int i = name + 1;
+float j = i / name;
 float try = 3.23;
