@@ -1,4 +1,4 @@
-with open("/Users/jiteshgogia/Desktop/Books/SPCC/Codes/input.txt", "r") as file:
+with open("input.txt", "r") as file:
     lines = file.readlines()
 
 keyword = []
