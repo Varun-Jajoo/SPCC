@@ -1,25 +1,36 @@
-productions = [
-    "E->EA|A",
-    "A->AT|a",
-    "T->a",
-    "E->i"
-]
 
-for production in productions:
-    print("\nGRAMMAR:", production)
-    non_terminal = production[0]
-    index = 3  # starting of the string following "->"
-    if non_terminal == production[index]:
-        alpha = production[index + 1]
-        print(" is left recursive.")
-        while index < len(production) and production[index] != '|' and production[index] != '\0':
-            index += 1
-        if index < len(production):
-            beta = production[index + 1]
-            print("Grammar without left recursion:")
-            print(f"{non_terminal}->{beta}{non_terminal}'")
-            print(f"{non_terminal}'->{alpha}{non_terminal}'|E")
+data = [ ['A', ['ABd','Aa','a']]]
+
+for i in range(len(data)):
+
+    left = data[i][0]
+    right = data[i][1]
+
+    alpha = []
+    beta = []
+
+    for j in right:
+        index = j.find(left)
+
+        if index == -1:
+            beta.append(j)
         else:
-            print(" can't be reduced")
-    else:
-        print(" is not left recursive.")
+            alpha.append(j[index + 1:len(j):])
+
+    temp = []
+    temp1 = []
+
+    if len(alpha) > 0:
+        for itr in beta:
+            temp.append(f"{itr}{left}^")
+        
+        for itr in alpha:
+            temp1.append(f"{itr}{left}^")
+        
+        temp1.append("è")
+
+        data[i][1] = temp
+        data.append([f"{left}^", temp1])
+
+
+print(data)
