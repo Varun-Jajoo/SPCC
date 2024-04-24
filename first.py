@@ -12,15 +12,13 @@ def cal_first(s, productions):
                     if j == len(productions[s][i]) - 1:
                         first.update(f)
                     else:
-                        f.remove('ε')
                         first.update(f)
             else:
                 first.add(c)
                 break
     return first
 
-def main():
-    productions = {
+productions = {
         'S': [['a', 'B', 'D', 'h']],
         'B': [['c', 'C']],
         'C': [['b', 'C'], ['ε']],
@@ -28,15 +26,12 @@ def main():
         'E': [['g'], ['ε']],
         'F': [['f'], ['ε']]
     }
-    first = {}
+first = {}
 
-    for s in productions.keys():
-        first[s] = cal_first(s, productions)
+for s in productions.keys():
+    first[s] = cal_first(s, productions)
 
-    print("*****FIRST*****")
-    for lhs, rhs in first.items():
-        print(lhs, ":", rhs)
-        print("")
-
-if __name__ == "__main__":
-    main()
+print("*****FIRST*****")
+for lhs, rhs in first.items():
+    print(lhs, ":", rhs)
+    print("")
