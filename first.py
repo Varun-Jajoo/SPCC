@@ -12,6 +12,7 @@ def cal_first(s, productions):
                     if j == len(productions[s][i]) - 1:
                         first.update(f)
                     else:
+                        f.remove('ε')
                         first.update(f)
             else:
                 first.add(c)
