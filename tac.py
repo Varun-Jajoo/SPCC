@@ -1,38 +1,62 @@
-def is_expression(c):
-    return c in ['+', '-', '/', '*']
+def generate_tac(expression):
+    temp_count = 0
+    code = []
+    tokens = tokenize(expression)
+    output_queue, operator_stack = [], []
 
-def main():
-    exp = "a*-b+c"
-    st = []
-    mp = {}
-    n = len(exp)
-    count = 1
-    
-    for i in range(n - 1, -1, -1):
-        
-        if is_expression(exp[i]) and len(st) > 0 and is_expression(st[0]):
-            e = st.pop(0)
-            c = st.pop(0)
+    for token in tokens:
+        if token.isalnum():
+            output_queue.append(token)
+        elif token in {'+', '-', '*', '/', '^'}:
+            while operator_stack and has_higher_precedence(operator_stack[-1], token):
+                output_queue.append(operator_stack.pop())
+            operator_stack.append(token)
+        elif token == '(':
+            operator_stack.append(token)
+        elif token == ')':
+            while operator_stack and operator_stack[-1] != '(':
+                output_queue.append(operator_stack.pop())
+            operator_stack.pop()
 
-            temp = e+c
-            key = 't' + str(count)
-            count += 1
-            mp[key] = temp
-            st.insert(0, key)
-            st.insert(0, exp[i])
+    output_queue.extend(reversed(operator_stack))
+    build_tac(output_queue, temp_count, code)
+    return code
 
-        elif not is_expression(exp[i]) and len(st) > 0 and is_expression(st[0]):
-            e = st.pop(0)
-            c = st.pop(0)
-            key = 't' + str(count)
-            count += 1
-            mp[key] = exp[i] + e + c
-            st.insert(0, key)
+def tokenize(expression):
+    tokens = []
+    current_token = ''
+    for char in expression:
+        if char.isalnum():
+            current_token += char
         else:
-            st.insert(0, exp[i])
-    
-    for key, value in mp.items():
-        print(key, value)
+            if current_token:
+                tokens.append(current_token)
+                current_token = ''
+            tokens.append(char)
+    if current_token:
+        tokens.append(current_token)
+    return tokens
 
+def has_higher_precedence(op1, op2):
+    precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+    return precedence.get(op1, 0) >= precedence.get(op2, 0)
+
+def build_tac(tokens, temp_count, code):
+    operand_stack = []
+    for token in tokens:
+        if token.isalnum():
+            operand_stack.append(token)
+        elif token in {'+', '-', '*', '/', '^'}:
+            operand2, operand1 = operand_stack.pop(), operand_stack.pop()
+            result_var = f't{temp_count}'
+            temp_count += 1
+            code.append(f'{result_var} = {operand1} {token} {operand2}')
+            operand_stack.append(result_var)
+
+# Example usage:
 if __name__ == "__main__":
-    main()
+    expression = "a = ( b * c) + 12 * ( e /f ) ^ g"
+    tac = generate_tac(expression)
+    print("Three Address Code (TAC) for expression:", expression)
+    for statement in tac:
+        print(statement)
